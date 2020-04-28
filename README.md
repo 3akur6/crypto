@@ -5,8 +5,10 @@ Crypto module for TP-LINK & FAST Router
 securityEncode ruby version, also gives guesses at plaintext    
 
 >securityEncode(javascript) is used to encrypt password in web frontend before posting to verify authentification.   
-`function prototype:   
-securityEncode(short_key, password, long_key)`
+(```)
+function prototype:   
+    securityEncode(short_key, password, long_key)
+(```)
 
 help to brute force tplink & fast router login page
 
