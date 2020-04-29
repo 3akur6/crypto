@@ -32,6 +32,10 @@ module Crypto
 
     attr_accessor :cipher
 
+    def self.decrypt!(cipher)
+      self.new(cipher).decrypt!
+    end
+
     def self.decrypt(cipher)
       self.new(cipher).decrypt
     end
@@ -47,20 +51,25 @@ module Crypto
       @cache
     end
 
-    def decrypt
+    def decrypt!
       return @plain if instance_variable_defined? :@plain
-      @possible = []
+      @plain = decrypt[0].product(*decrypt.drop(1)).map(&:join)
+    end
+
+    def decrypt
+      return @plain_set if instance_variable_defined? :@plain_set
+      @plain_set = []
       @cipher.chars.map(&:ord).each_with_index do |c, idx|
         find[c.chr].each do |x|
           if (32..127).include? (SEED[idx].ord rescue 187) ^ x
-            (@possible[idx] ||= []) << ((SEED[idx].ord rescue 187) ^ x).chr
+            (@plain_set[idx] ||= []) << ((SEED[idx].ord rescue 187) ^ x).chr
           else
             next
           end
         end
-        break if @possible[idx].nil?
+        break if @plain_set[idx].nil?
       end
-      @plain = @possible[0].product(*@possible.drop(1)).map(&:join)
+      @plain_set
     end
 
     alias_method :plain, :decrypt
