@@ -60,6 +60,7 @@ module Crypto
       return @plain_set if instance_variable_defined? :@plain_set
       @plain_set = []
       @cipher.chars.map(&:ord).each_with_index do |c, idx|
+        raise ArgumentError, "Expected a cipher, #{@cipher} may not match" unless find.has_key? c.chr
         find[c.chr].each do |x|
           if (32..127).include? (SEED[idx].ord rescue 187) ^ x
             (@plain_set[idx] ||= []) << ((SEED[idx].ord rescue 187) ^ x).chr
